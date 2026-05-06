@@ -10,4 +10,21 @@
         <maven.compiler.release>25</maven.compiler.release>
         <exec.mainClass>edu.utmb.ontology.nanovoilin.Nanovoilin</exec.mainClass>
     </properties>
+    
+    <dependencies>
+        <!-- Source: https://mvnrepository.com/artifact/net.sourceforge.owlapi/owlapi-distribution -->
+<dependency>
+    <groupId>net.sourceforge.owlapi</groupId>
+    <artifactId>owlapi-distribution</artifactId>
+    <version>5.5.1</version>
+    <scope>compile</scope>
+</dependency>
+<!-- Source: https://mvnrepository.com/artifact/org.nanopub/nanopub -->
+<dependency>
+    <groupId>org.nanopub</groupId>
+    <artifactId>nanopub</artifactId>
+    <version>1.87.1</version>
+    <scope>compile</scope>
+</dependency>
+    </dependencies>
 </project>
