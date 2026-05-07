@@ -26,6 +26,7 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLClassExpressionVisitor;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
+import org.semanticweb.owlapi.model.OWLObjectIntersectionOf;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectVisitor;
@@ -33,6 +34,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
+import org.semanticweb.owlapi.search.EntitySearcher;
 
 /**
  *
@@ -76,14 +78,20 @@ public class ExtractAxioms extends ExtractionImplementation {
         //ontology.axioms(owl_class).forEach(ax->ax.accept(restrictionVisitor));
         //Stream<OWLClassAxiom> axioms = ontology.axioms(owl_class);
         //axioms.forEach(System.out::println);
+        System.out.println(owl_class.toString());
+        
+        EntitySearcher.getAnnotationObjects(owl_class, ontology).forEach(System.out::println);
         
         
+        Set<OWLClassExpression> processesExpressions = restrictionVisitor.getOWLClassExpression();
+        Set<OWLClass> processesClasses = restrictionVisitor.getProcessesClasses();
         
-        Set<OWLClassExpression> processesClasses = restrictionVisitor.getOWLClassExpression();
+        for(OWLClassExpression oc : processesExpressions){
+            System.out.println(oc + " with " + oc.signature().count());
+        }
         
-        for(OWLClassExpression oc : processesClasses){
-            //System.out.println(oc + " with " + oc.signature().count());
-            //if(oc.signature().count() < 3) processesClasses.remove(oc);
+        for(OWLClass oc : processesClasses){
+            System.out.println(oc);
         }
         
         OWLOntologyManager m = OWLManager.createConcurrentOWLOntologyManager();
@@ -95,12 +103,16 @@ public class ExtractAxioms extends ExtractionImplementation {
         try {
 
             OWLOntology tempOntology = m.createOntology();
+            //tempOntology.add(factory.getOWLEquivalentClassesAxiom(
+            //        processesClasses.stream().filter(pc -> (pc.signature().count() < 3)).collect(toSet())
+            //));
+            
             tempOntology.add(factory.getOWLEquivalentClassesAxiom(
-                    processesClasses.stream().filter(pc -> (pc.signature().count() < 3)).collect(toSet())
+                    processesClasses
             ));
+            
             TurtleDocumentFormat turtle = new TurtleDocumentFormat();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            tempOntology.saveOntology(turtle, baos);
             tempOntology.saveOntology(turtle, new FileOutputStream(new File("testthis.ttl")));
 
 
@@ -155,10 +167,10 @@ public class ExtractAxioms extends ExtractionImplementation {
                 // recursively visit named supers. Note that we need to keep
                 // track of the classes that we have processed so that we don't
                 // get caught out by cycles in the taxonomy
-                processedClasses.add(ce);
+               
+                if(!ce.isOWLThing()) processedClasses.add(ce);
                 for (OWLOntology ont : onts) {
-                    ont.subClassAxiomsForSubClass(ce)
-                        .forEach(ax -> ax.getSuperClass().accept(this));
+                    ont.subClassAxiomsForSubClass(ce).forEach(ax -> ax.getSuperClass().accept(this));
                 }
             }
         }
@@ -173,6 +185,11 @@ public class ExtractAxioms extends ExtractionImplementation {
             //ce.components().forEach(System.out::println);
             
             oce.add(ce);
+        }
+
+        @Override
+        public void visit(OWLObjectIntersectionOf ce) {
+            OWLClassExpressionVisitor.super.visit(ce); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
         }
         
         public Set<OWLClass> getProcessesClasses(){
