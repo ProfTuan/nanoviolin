@@ -118,7 +118,7 @@ public class NanoViolinEncoder {
         }
     }
     
-    public void publishNanoViolinPubTestServer(){
+    public void publishNanoViolinPubForTestServer(){
         
         try {
             PublishNanopub.publishToTestServer(signing);

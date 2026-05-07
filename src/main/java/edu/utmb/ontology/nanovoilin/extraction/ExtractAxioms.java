@@ -171,6 +171,7 @@ public class ExtractAxioms extends ExtractionImplementation {
                 if(!ce.isOWLThing()) processedClasses.add(ce);
                 for (OWLOntology ont : onts) {
                     ont.subClassAxiomsForSubClass(ce).forEach(ax -> ax.getSuperClass().accept(this));
+                    
                 }
             }
         }
@@ -183,7 +184,7 @@ public class ExtractAxioms extends ExtractionImplementation {
             //System.out.println(ce);
             
             //ce.components().forEach(System.out::println);
-            
+           
             oce.add(ce);
         }
 
