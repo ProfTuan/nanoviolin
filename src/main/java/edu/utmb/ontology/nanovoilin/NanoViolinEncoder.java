@@ -12,9 +12,7 @@ import java.security.InvalidKeyException;
 import java.security.SignatureException;
 import net.trustyuri.TrustyUriException;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.base.CoreDatatype;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.PROV;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -23,7 +21,9 @@ import org.nanopub.Nanopub;
 import org.nanopub.NanopubAlreadyFinalizedException;
 import org.nanopub.NanopubCreator;
 import org.nanopub.NanopubUtils;
+import org.nanopub.extra.security.MakeKeys;
 import org.nanopub.extra.security.SignNanopub;
+import org.nanopub.extra.security.SignatureAlgorithm;
 import org.nanopub.extra.security.TransformContext;
 import org.nanopub.extra.server.PublishNanopub;
 
@@ -41,6 +41,15 @@ public class NanoViolinEncoder {
     private Nanopub signing = null;
     
     private NanoViolinEncoder() {
+    }
+    
+    public void createKey(){
+        try {
+            MakeKeys.make("~/.nanopub/id", SignatureAlgorithm.RSA);
+        } catch (IOException ex) {
+            System.getLogger(NanoViolinEncoder.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        
     }
     
     public void instantiateNewNanoViolinPub(String iri_string){
