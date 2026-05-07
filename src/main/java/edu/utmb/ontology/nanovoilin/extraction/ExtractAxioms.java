@@ -82,23 +82,28 @@ public class ExtractAxioms extends ExtractionImplementation {
         Set<OWLClassExpression> processesClasses = restrictionVisitor.getOWLClassExpression();
         
         for(OWLClassExpression oc : processesClasses){
-            System.out.println(oc + " with " + oc.signature().count());
+            //System.out.println(oc + " with " + oc.signature().count());
             //if(oc.signature().count() < 3) processesClasses.remove(oc);
         }
         
         OWLOntologyManager m = OWLManager.createConcurrentOWLOntologyManager();
         
+        Set<OWLClassExpression> collect = processesClasses.stream().filter(pc -> (pc.signature().count() > 2)).collect(toSet());
+        
+        collect.forEach(System.out::println);
+        
         try {
-            
+
             OWLOntology tempOntology = m.createOntology();
             tempOntology.add(factory.getOWLEquivalentClassesAxiom(
-                    processesClasses.stream().filter(pc->(pc.signature().count()>2)).collect(toSet())
+                    processesClasses.stream().filter(pc -> (pc.signature().count() < 3)).collect(toSet())
             ));
             TurtleDocumentFormat turtle = new TurtleDocumentFormat();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-tempOntology.saveOntology(turtle, baos);
-             tempOntology.saveOntology(turtle, new FileOutputStream(new File("testthis.ttl")));
-            
+            tempOntology.saveOntology(turtle, baos);
+            tempOntology.saveOntology(turtle, new FileOutputStream(new File("testthis.ttl")));
+
+
         } catch (OWLOntologyCreationException ex) {
             System.getLogger(ExtractAxioms.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         } catch (OWLOntologyStorageException ex) {
