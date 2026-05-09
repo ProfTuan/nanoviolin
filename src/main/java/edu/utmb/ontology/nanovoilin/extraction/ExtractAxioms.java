@@ -4,32 +4,20 @@
  */
 package edu.utmb.ontology.nanovoilin.extraction;
 
-import edu.utmb.ontology.nanovoilin.IRI.VaccineOntologyIRI;
+import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
 import edu.utmb.ontology.nanovoilin.util.OWLHandler;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
-import static java.util.stream.Collectors.toSet;
-import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.TurtleDocumentFormat;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLClassExpressionVisitor;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
-import org.semanticweb.owlapi.model.OWLObjectIntersectionOf;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
-import org.semanticweb.owlapi.model.OWLObjectVisitor;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
@@ -42,23 +30,52 @@ import org.semanticweb.owlapi.search.EntitySearcher;
  */
 public class ExtractAxioms extends ExtractionImplementation {
     
+    private OWLOntology ontology = null;
+    private OWLDataFactory factory = null;
+    private OWLHandler owl_controller = null;
+    
     public ExtractAxioms(){
         
     }
     
+    public ExtractAxioms(OWLHandler owl_controller){
+        this.owl_controller = owl_controller;
+        this.ontology = owl_controller.getOntology();
+        this.factory = owl_controller.getOWLDataFactory();
+    }
     
     
-    public void extractAxiomsFromClass(IRI class_iri){
-        
-        OWLHandler controller = OWLHandler.getInstance();
-        OWLClass owl_class = controller.getOWLClass(class_iri);
+    public void extractClassExpressionsFromClass(IRI class_iri){
         
         
-        //controller.getClassSignature(owl_class);
+        OWLClass owl_class = owl_controller.getOWLClass(class_iri);
         
-        Set<OWLAxiom> extracted_results = this.extractClass(owl_class);
+        RestrictionVisitor restrictionVisitor = new RestrictionVisitor(Collections.singleton(this.ontology));
         
-        extracted_results.forEach(System.out::println);
+        ontology.subClassAxiomsForSubClass(owl_class).forEach(ax -> ax.getSuperClass().accept(restrictionVisitor));
+        
+        //Annotations to extract
+        //EntitySearcher.getAnnotationObjects(owl_class, ontology).forEach(System.out::println);
+        
+        //Simple sublcasses to extract
+        //Set<OWLClass> processesClasses = restrictionVisitor.getProcessesClasses();
+        
+        //class definition including inferred. Focus on basic triple
+        //Set<OWLClassExpression> processesExpressions = restrictionVisitor.getOWLClassExpression();
+        
+        
+    }
+    
+    public void getSubclasses(){
+        
+    }
+    
+    public void getBasicClassDefinitions(){
+        
+    }
+    
+    public void getAnnotations(){
+        
     }
     
     public void test(IRI class_iri){
@@ -96,9 +113,9 @@ public class ExtractAxioms extends ExtractionImplementation {
         
         OWLOntologyManager m = OWLManager.createConcurrentOWLOntologyManager();
         
-        Set<OWLClassExpression> collect = processesClasses.stream().filter(pc -> (pc.signature().count() > 2)).collect(toSet());
+        //Set<OWLClassExpression> collect = processesClasses.stream().filter(pc -> (pc.signature().count() > 2)).collect(toSet());
         
-        collect.forEach(System.out::println);
+        //collect.forEach(System.out::println);
         
         try {
 
@@ -142,66 +159,10 @@ public class ExtractAxioms extends ExtractionImplementation {
         
         
     }
-    
-    
-    
-    //borrowed from Github OWLAPI
-    private static class RestrictionVisitor implements OWLClassExpressionVisitor {
 
-        private final Set<OWLClass> processedClasses;
-        private final Set<OWLOntology> onts;
-        private Set<OWLClassExpression> oce;
-        
-        
-        RestrictionVisitor(Set<OWLOntology> onts) {
-            processedClasses = new HashSet<OWLClass>();
-            this.onts = onts;
-            
-            oce = new HashSet<OWLClassExpression>();
-        }
-
-        @Override
-        public void visit(OWLClass ce) {
-            if (!processedClasses.contains(ce)) {
-                // If we are processing inherited restrictions then we
-                // recursively visit named supers. Note that we need to keep
-                // track of the classes that we have processed so that we don't
-                // get caught out by cycles in the taxonomy
-               
-                if(!ce.isOWLThing()) processedClasses.add(ce);
-                for (OWLOntology ont : onts) {
-                    ont.subClassAxiomsForSubClass(ce).forEach(ax -> ax.getSuperClass().accept(this));
-                    
-                }
-            }
-        }
-
-        @Override
-        public void visit(OWLObjectSomeValuesFrom ce) {
-            // This method gets called when a class expression is an existential
-            // (someValuesFrom) restriction and it asks us to visit it
-            
-            //System.out.println(ce);
-            
-            //ce.components().forEach(System.out::println);
-           
-            oce.add(ce);
-        }
-
-        @Override
-        public void visit(OWLObjectIntersectionOf ce) {
-            OWLClassExpressionVisitor.super.visit(ce); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-        }
-        
-        public Set<OWLClass> getProcessesClasses(){
-            return processedClasses;
-        }
-        
-        public Set<OWLClassExpression> getOWLClassExpression(){
-            return oce;
-        }
-    }
+   
     
+
     
 }
 

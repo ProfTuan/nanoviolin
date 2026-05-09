@@ -4,9 +4,11 @@
 
 package edu.utmb.ontology.nanovoilin;
 
-import edu.utmb.ontology.nanovoilin.IRI.VaccineOntologyIRI;
+import edu.utmb.ontology.nanovoilin.extraction.ExtractAxioms;
+import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
 import edu.utmb.ontology.nanovoilin.extraction.STARExtraction;
 import edu.utmb.ontology.nanovoilin.util.OWLHandler;
+import org.semanticweb.owlapi.model.IRI;
 
 /**
  *
@@ -15,8 +17,23 @@ import edu.utmb.ontology.nanovoilin.util.OWLHandler;
 public class NanoVoilin {
     
     private OWLHandler owl_controller = null;
+    private ExtractAxioms extractor = null;
     
     public NanoVoilin(){
+        owl_controller = OWLHandler.getInstance();
+        
+        
+    }
+    
+    public NanoVoilin(IRI ontology_iri){
+        owl_controller = OWLHandler.getInstance();
+        owl_controller.init(ontology_iri);
+        
+        extractor = new ExtractAxioms(owl_controller);
+        
+    }
+    
+    public void setUpExtraction(){
         
     }
 
