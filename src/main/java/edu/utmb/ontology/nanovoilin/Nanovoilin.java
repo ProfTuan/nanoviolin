@@ -6,7 +6,6 @@ package edu.utmb.ontology.nanovoilin;
 
 import edu.utmb.ontology.nanovoilin.extraction.ExtractAxioms;
 import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
-import edu.utmb.ontology.nanovoilin.extraction.STARExtraction;
 import edu.utmb.ontology.nanovoilin.util.OWLHandler;
 import org.semanticweb.owlapi.model.IRI;
 
@@ -30,6 +29,8 @@ public class NanoVoilin {
         owl_controller.init(ontology_iri);
         
         extractor = new ExtractAxioms(owl_controller);
+        
+        
         
     }
     

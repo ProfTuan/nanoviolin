@@ -4,6 +4,7 @@
  */
 package edu.utmb.ontology.nanovoilin.extraction;
 
+import edu.utmb.ontology.nanovoilin.data.ExtractedClassInformation;
 import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
 import edu.utmb.ontology.nanovoilin.util.OWLHandler;
 import java.io.ByteArrayOutputStream;
@@ -12,9 +13,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Collections;
 import java.util.Set;
+import static java.util.stream.Collectors.toSet;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.TurtleDocumentFormat;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -33,6 +36,10 @@ public class ExtractAxioms extends ExtractionImplementation {
     private OWLOntology ontology = null;
     private OWLDataFactory factory = null;
     private OWLHandler owl_controller = null;
+    
+    private Set<OWLClass> sub_classes = null;
+    private Set<OWLClassExpression> class_expressions = null;
+    private Set<OWLAnnotation> class_annotations = null;
     
     public ExtractAxioms(){
         
@@ -56,26 +63,38 @@ public class ExtractAxioms extends ExtractionImplementation {
         
         //Annotations to extract
         //EntitySearcher.getAnnotationObjects(owl_class, ontology).forEach(System.out::println);
+        class_annotations = this.extractClassAnnotations(owl_class, ontology);
+
+        ExtractedClassInformation eci = this.extractClassInformation(owl_class, ontology);
+
         
         //Simple sublcasses to extract
         //Set<OWLClass> processesClasses = restrictionVisitor.getProcessesClasses();
+        
         
         //class definition including inferred. Focus on basic triple
         //Set<OWLClassExpression> processesExpressions = restrictionVisitor.getOWLClassExpression();
         
         
-    }
-    
-    public void getSubclasses(){
+        sub_classes = eci.subclasses;
+        class_expressions = eci.class_expressions;
         
     }
     
-    public void getBasicClassDefinitions(){
+    public Set<OWLClass> getSubclasses(){
         
+        return this.sub_classes;
     }
     
-    public void getAnnotations(){
+    public Set<OWLClassExpression> getBasicClassDefinitions(){
         
+        
+        return this.class_expressions;
+    }
+    
+    public Set<OWLAnnotation> getClassAnnotations(){
+        
+        return this.class_annotations;
     }
     
     public void test(IRI class_iri){

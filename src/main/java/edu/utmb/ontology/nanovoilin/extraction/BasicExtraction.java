@@ -4,12 +4,20 @@
  */
 package edu.utmb.ontology.nanovoilin.extraction;
 
-import org.semanticweb.owlapi.model.IRI;
+import edu.utmb.ontology.nanovoilin.data.ExtractedClassInformation;
+import java.util.Set;
+import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 /**
  *
  * @author mac
  */
 public interface BasicExtraction {
-    public void extractClassExpressionsFromClass(IRI class_iri);
+    //public void extractClassExpressionsFromClass(IRI class_iri);
+    
+    public Set<OWLAnnotation> extractClassAnnotations(OWLClass owl_class, OWLOntology owl_ontology);
+    public ExtractedClassInformation extractClassInformation(OWLClass owl_class, OWLOntology owl_ontology);
+    
 }

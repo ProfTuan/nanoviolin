@@ -4,9 +4,13 @@
  */
 package edu.utmb.ontology.nanovoilin.extraction;
 
+import edu.utmb.ontology.nanovoilin.data.ExtractedClassInformation;
 import edu.utmb.ontology.nanovoilin.util.OWLHandler;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import static java.util.stream.Collectors.toSet;
+import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
@@ -17,6 +21,7 @@ import org.semanticweb.owlapi.model.OWLObjectIntersectionOf;
 import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.search.EntitySearcher;
 import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 import uk.ac.manchester.cs.owlapi.modularity.SyntacticLocalityModuleExtractor;
 
@@ -30,6 +35,26 @@ public abstract class ExtractionImplementation implements STARExtraction, BasicE
     
     private Set<OWLEntity>signatures = new HashSet<OWLEntity>();
 
+    @Override
+    public Set<OWLAnnotation> extractClassAnnotations(OWLClass owl_class, OWLOntology owl_ontology) {
+        Set<OWLAnnotation> collect = EntitySearcher.getAnnotationObjects(owl_class, owl_ontology).collect(toSet());
+        
+        return collect;
+    }
+
+    @Override
+    public ExtractedClassInformation extractClassInformation(OWLClass owl_class, OWLOntology owl_ontology){
+        RestrictionVisitor restrictionVisitor = new RestrictionVisitor(Collections.singleton(owl_ontology));
+        
+        ExtractedClassInformation extracted = new ExtractedClassInformation();
+        extracted.class_expressions = restrictionVisitor.getOWLClassExpression();
+        extracted.subclasses = restrictionVisitor.getProcessesClasses();
+        
+        return extracted;
+    }
+
+    
+    
     @Override
     public Set<OWLAxiom> extractClass(OWLClass owl_class) {
         
