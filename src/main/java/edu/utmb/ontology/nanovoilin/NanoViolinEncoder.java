@@ -4,58 +4,27 @@
  */
 package edu.utmb.ontology.nanovoilin;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.SignatureException;
-import net.trustyuri.TrustyUriException;
+import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.PROV;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.nanopub.Nanopub;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.nanopub.NanopubAlreadyFinalizedException;
 import org.nanopub.NanopubCreator;
-import org.nanopub.NanopubUtils;
-import org.nanopub.extra.security.MakeKeys;
-import org.nanopub.extra.security.SignNanopub;
-import org.nanopub.extra.security.SignatureAlgorithm;
-import org.nanopub.extra.security.TransformContext;
-import org.nanopub.extra.server.PublishNanopub;
 
 /**
  *
  * @author mac
  */
-public class NanoViolinEncoder {
+public class NanoViolinEncoder extends NanoEncoderImplementation {
     
-    
-    final ValueFactory value_factory = SimpleValueFactory.getInstance();
-    private NanopubCreator creator = null;
-    private IRI nanoViolinIRI = null;
-    private Nanopub nanoViolinPub = null;
-    private Nanopub signing = null;
-    
+
     private NanoViolinEncoder() {
-    }
-    
-    public void createKey(){
-        try {
-            MakeKeys.make("~/.nanopub/id", SignatureAlgorithm.RSA);
-        } catch (IOException ex) {
-            System.getLogger(NanoViolinEncoder.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
         
     }
-    
+
     public void instantiateNewNanoViolinPub(String iri_string){
-        
-        
-        
+ 
         try {
             
             creator = new NanopubCreator(true);
@@ -71,11 +40,68 @@ public class NanoViolinEncoder {
     
     public void writeAssertionStatement(RDF predicate, String string_value){
         
+        if (creator == null){
+            
+        }
+        //creator.addAssertionStatement(statement);
     }
     
-    public void writeAssertionStatement(String iri_predicate, String string_value){
+    public void writeTypeOfStatement(String iri_thing_string,String iri_type_string){
+        
+        IRI type_iri = value_factory.createIRI(iri_type_string);
+        IRI subject_iri = value_factory.createIRI(iri_thing_string);
+        
+        
+        encodeAssertionStatement(subject_iri, RDF.TYPE, type_iri);
+        
         
     }
+    
+    public void writeLabelStatement(String iri_subject, String value){
+        IRI subject = value_factory.createIRI(iri_subject);
+        IRI value_object = value_factory.createIRI(value);
+        
+        encodeAssertionStatement(subject, RDFS.LABEL, value_object);
+    }
+    
+
+    public void writeAttributedByStatement(String label){
+        
+        
+        encodeProvenanceStatement(PROV.WAS_ATTRIBUTED_TO, label);
+    }
+    
+    public void writeTermEditorStatement(String value){
+        
+        IRI term_editor_iri = value_factory.createIRI(VaccineOntologyIRI.term_editor.toString());
+        
+        encodeProvenanceStatement(term_editor_iri, value);
+        
+    }
+    
+    public void writeCrossReferenceStatement(String value){
+        IRI x_ref = value_factory.createIRI(VaccineOntologyIRI.has_cross_reference().toString());
+        
+        encodeProvenanceStatement(x_ref, value);
+    }
+    
+    public void writeDefinitionSource(String value){
+        IRI IAO_def_source = value_factory.createIRI(VaccineOntologyIRI.definition().toString());
+        
+        encodeProvenanceStatement(IAO_def_source, value);
+    }
+    
+    public void writeDefinitionStatement(String value){
+        IRI IAO_definition = value_factory.createIRI(VaccineOntologyIRI.definition_source().toString());
+        
+        encodeProvenanceStatement(IAO_definition, value);
+    }
+    
+   public void writeViolinVaccineID(String value){
+       IRI violin_id = value_factory.createIRI(VaccineOntologyIRI.violin_vaccine_id);
+       
+       encodeProvenanceStatement(violin_id, value);
+   }
     
     public void writeProvenanceStatement(String iri_predicate, String string_value){
         //creator.addProvenanceStatement(PROV.WAS_ATTRIBUTED_TO, "Oliver He");
@@ -83,51 +109,9 @@ public class NanoViolinEncoder {
         //value_factory.createLiteral("Oliver He", CoreDatatype.XSD.STRING);
         
     }
-    
-    public void writeProvenanceStatement(PROV predicate, String string_value){
-        
-    }
-    
-    public void writePublicationInfoStatement(){
-        
-    }
-    
-    public void signOffNanoViolinPub(){
-        
-        try {
-            
-            signing = SignNanopub.signAndTransform(nanoViolinPub, TransformContext.makeDefault());
-            
-            NanopubUtils.writeToStream(signing, System.err, RDFFormat.TRIG);
-            
-        } catch (TrustyUriException ex) {
-            System.getLogger(NanoViolinEncoder.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        } catch (InvalidKeyException ex) {
-            System.getLogger(NanoViolinEncoder.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        } catch (SignatureException ex) {
-            System.getLogger(NanoViolinEncoder.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
-        
-    }
-    
-    public void publishNanoViolinAsExport(String file_export_path){
-        try {
-            NanopubUtils.writeToStream(signing, new FileOutputStream(new File(file_export_path)), RDFFormat.TRIG);
-        } catch (FileNotFoundException ex) {
-            System.getLogger(NanoViolinEncoder.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
-    }
-    
-    public void publishNanoViolinPubForTestServer(){
-        
-        try {
-            PublishNanopub.publishToTestServer(signing);
-        } catch (IOException ex) {
-            System.getLogger(NanoViolinEncoder.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
-        
-    }
-    
+
+
+
     public static NanoViolinEncoder getInstance() {
         return NanoViolinEncoderHolder.INSTANCE;
     }
@@ -135,5 +119,11 @@ public class NanoViolinEncoder {
     private static class NanoViolinEncoderHolder {
 
         private static final NanoViolinEncoder INSTANCE = new NanoViolinEncoder();
+    }
+    
+    public static void main(String[] args) {
+        
+        System.out.println(VaccineOntologyIRI.term_editor().toString());
+        
     }
 }
