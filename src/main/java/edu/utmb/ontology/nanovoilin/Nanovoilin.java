@@ -17,11 +17,13 @@ public class NanoVoilin {
     
     private OWLHandler owl_controller = null;
     private ExtractAxioms extractor = null;
+    private NanoViolinEncoder encoder = null;
+    
     
     public NanoVoilin(){
-        owl_controller = OWLHandler.getInstance();
+        if(owl_controller == null) owl_controller = OWLHandler.getInstance();
         
-        
+        if(encoder == null) encoder = NanoViolinEncoder.getInstance();
     }
     
     public NanoVoilin(IRI ontology_iri){

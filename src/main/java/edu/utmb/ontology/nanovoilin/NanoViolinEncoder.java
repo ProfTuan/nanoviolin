@@ -102,14 +102,6 @@ public class NanoViolinEncoder extends NanoEncoderImplementation {
        
        encodeProvenanceStatement(violin_id, value);
    }
-    
-    public void writeProvenanceStatement(String iri_predicate, String string_value){
-        //creator.addProvenanceStatement(PROV.WAS_ATTRIBUTED_TO, "Oliver He");
-        
-        //value_factory.createLiteral("Oliver He", CoreDatatype.XSD.STRING);
-        
-    }
-
 
 
     public static NanoViolinEncoder getInstance() {
@@ -123,7 +115,7 @@ public class NanoViolinEncoder extends NanoEncoderImplementation {
     
     public static void main(String[] args) {
         
-        System.out.println(VaccineOntologyIRI.term_editor().toString());
+        //System.out.println(VaccineOntologyIRI.term_editor().toString());
         
     }
 }
