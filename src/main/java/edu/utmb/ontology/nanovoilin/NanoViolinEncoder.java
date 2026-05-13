@@ -20,7 +20,7 @@ public class NanoViolinEncoder extends NanoEncoderImplementation {
     
 
     private NanoViolinEncoder() {
-        
+        createKey();
     }
 
     public void instantiateNewNanoViolinPub(String iri_string){

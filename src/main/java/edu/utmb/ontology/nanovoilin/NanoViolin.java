@@ -80,7 +80,7 @@ public class NanoViolin {
 
     }
     
-    public void encodeToNanoViolinPublication(){
+    public void vaccine_NanoViolinPublication(){
         
         
         for(var i : vaccine_class_dataset.entrySet())
@@ -100,6 +100,10 @@ public class NanoViolin {
         
     }
     
+    private void transform(){
+        
+    }
+    
     public void setUpExtraction(){
         
     }
@@ -113,7 +117,7 @@ public class NanoViolin {
         
         nv.batchVaccineNanopubCreation(retrieveAllVaccineIRIs);
 
-        nv.encodeToNanoViolinPublication();
+        nv.vaccine_NanoViolinPublication();
         
     }
 }
