@@ -19,5 +19,6 @@ public interface BasicExtraction {
     
     public Set<OWLAnnotation> extractClassAnnotations(OWLClass owl_class, OWLOntology owl_ontology);
     public ExtractedClassInformation extractClassInformation(OWLClass owl_class, OWLOntology owl_ontology);
+    public ExtractedClassInformation extractClassInformation(ExtractionImplementation.RestrictionVisitor restrictionVisitor);
     
 }

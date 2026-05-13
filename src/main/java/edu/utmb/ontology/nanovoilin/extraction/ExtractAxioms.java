@@ -52,7 +52,7 @@ public class ExtractAxioms extends ExtractionImplementation {
     }
     
     
-    public void extractClassExpressionsFromClass(IRI class_iri){
+    public ExtractedClassInformation extractClassExpressions(IRI class_iri){
         
         
         OWLClass owl_class = owl_controller.getOWLClass(class_iri);
@@ -64,21 +64,24 @@ public class ExtractAxioms extends ExtractionImplementation {
         //Annotations to extract
         //EntitySearcher.getAnnotationObjects(owl_class, ontology).forEach(System.out::println);
         class_annotations = this.extractClassAnnotations(owl_class, ontology);
-
-        ExtractedClassInformation eci = this.extractClassInformation(owl_class, ontology);
-
         
-        //Simple sublcasses to extract
-        //Set<OWLClass> processesClasses = restrictionVisitor.getProcessesClasses();
-        
-        
-        //class definition including inferred. Focus on basic triple
-        //Set<OWLClassExpression> processesExpressions = restrictionVisitor.getOWLClassExpression();
-        
-        
+        ExtractedClassInformation eci = this.extractClassInformation(restrictionVisitor);
+       
         sub_classes = eci.subclasses;
         class_expressions = eci.class_expressions;
+        eci.class_annotations = class_annotations;
         
+        return eci;
+    }
+    
+    public ExtractedClassInformation getPackagedInstructions(){
+        ExtractedClassInformation eci = new ExtractedClassInformation();
+        
+        eci.subclasses = sub_classes;
+        eci.class_expressions = class_expressions;
+        eci.class_annotations = class_annotations;
+        
+        return eci;
     }
     
     public Set<OWLClass> getSubclasses(){

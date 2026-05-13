@@ -46,11 +46,25 @@ public abstract class ExtractionImplementation implements STARExtraction, BasicE
     public ExtractedClassInformation extractClassInformation(OWLClass owl_class, OWLOntology owl_ontology){
         RestrictionVisitor restrictionVisitor = new RestrictionVisitor(Collections.singleton(owl_ontology));
         
+        
+        
         ExtractedClassInformation extracted = new ExtractedClassInformation();
-        extracted.class_expressions = restrictionVisitor.getOWLClassExpression();
-        extracted.subclasses = restrictionVisitor.getProcessesClasses();
+        extracted.class_expressions.addAll(restrictionVisitor.getOWLClassExpression());
+        extracted.subclasses.addAll(restrictionVisitor.getProcessesClasses());
         
         return extracted;
+    }
+
+    @Override
+    public ExtractedClassInformation extractClassInformation(RestrictionVisitor restrictionVisitor) {
+        
+        ExtractedClassInformation extracted = new ExtractedClassInformation();
+        
+        extracted.class_expressions.addAll(restrictionVisitor.getOWLClassExpression());
+        extracted.subclasses.addAll(restrictionVisitor.getProcessesClasses());
+        
+        return extracted;
+        
     }
 
     
@@ -118,7 +132,7 @@ public abstract class ExtractionImplementation implements STARExtraction, BasicE
     }
     
     //borrowed from Github OWLAPI
-    public static class RestrictionVisitor implements OWLClassExpressionVisitor {
+    public class RestrictionVisitor implements OWLClassExpressionVisitor {
 
         private final Set<OWLClass> processedClasses;
         private final Set<OWLOntology> onts;

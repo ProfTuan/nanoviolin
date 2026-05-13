@@ -4,6 +4,7 @@
 
 package edu.utmb.ontology.nanovoilin;
 
+import edu.utmb.ontology.nanovoilin.data.ExtractedClassInformation;
 import edu.utmb.ontology.nanovoilin.extraction.ExtractAxioms;
 import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
 import edu.utmb.ontology.nanovoilin.util.OWLHandler;
@@ -27,7 +28,7 @@ public class NanoViolin {
     private ExtractAxioms extractor = null;
     private NanoViolinEncoder encoder = null;
     private Set<OWLClass> vaccine_entities = null;
-    
+    private Set<ExtractedClassInformation> vaccine_class_information = null;
     
     public NanoViolin(){
         if(owl_controller == null) owl_controller = OWLHandler.getInstance();
@@ -40,20 +41,17 @@ public class NanoViolin {
         owl_controller.init(ontology_iri);
         
         extractor = new ExtractAxioms(owl_controller);
-        
-        
-        
+
     }
     
-    public void retrieveAllVaccineIRIs(){
+    public Set<OWLClass> retrieveAllVaccineIRIs(){
         
         //capture all that have vaccine violin id
-        
-        
+
         OWLAnnotationProperty violin_id_annotation = owl_controller.getOWLAnnotationProperty(VaccineOntologyIRI.violin_vaccine_id());
         
         Set<OWLClass> allClasses = owl_controller.getAllClasses();
-        //System.out.println(allClasses.size());
+       
         vaccine_entities = new HashSet<OWLClass>();
         
         for(OWLClass oc : allClasses){
@@ -64,7 +62,17 @@ public class NanoViolin {
             
         }
         
-       
+       return vaccine_entities;
+    }
+    
+    public void batchVaccineNanopubCreation(Set<OWLClass> vaxxes) {
+
+        for (OWLClass vax : vaxxes) {
+
+            ExtractedClassInformation vaccine_class_information = extractor.extractClassExpressions(vax.getIRI());
+            
+        }
+
     }
     
     public void setUpExtraction(){
@@ -73,17 +81,13 @@ public class NanoViolin {
 
     public static void main(String[] args) {
         
-        //OWLHandler owl_controller = OWLHandler.getInstance();
-        
-        //owl_controller.init(VaccineOntologyIRI.IRI());
-       
+
         NanoViolin nv = new NanoViolin(VaccineOntologyIRI.IRI());
         
-        nv.retrieveAllVaccineIRIs();
+        Set<OWLClass> retrieveAllVaccineIRIs = nv.retrieveAllVaccineIRIs();
         
-        
-        //http://purl.obolibrary.org/obo/VO_0015077
-        
-        
+        nv.batchVaccineNanopubCreation(retrieveAllVaccineIRIs);
+
+
     }
 }
