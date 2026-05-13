@@ -8,7 +8,9 @@ import edu.utmb.ontology.nanovoilin.data.ExtractedClassInformation;
 import edu.utmb.ontology.nanovoilin.extraction.ExtractAxioms;
 import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
 import edu.utmb.ontology.nanovoilin.util.OWLHandler;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import static java.util.stream.Collectors.toSet;
 import java.util.stream.Stream;
@@ -28,7 +30,7 @@ public class NanoViolin {
     private ExtractAxioms extractor = null;
     private NanoViolinEncoder encoder = null;
     private Set<OWLClass> vaccine_entities = null;
-    private Set<ExtractedClassInformation> vaccine_class_information = null;
+    private Map<OWLClass, ExtractedClassInformation> vaccine_class_dataset = null;
     
     public NanoViolin(){
         if(owl_controller == null) owl_controller = OWLHandler.getInstance();
@@ -67,12 +69,34 @@ public class NanoViolin {
     
     public void batchVaccineNanopubCreation(Set<OWLClass> vaxxes) {
 
+        vaccine_class_dataset = new HashMap<>();
+        
         for (OWLClass vax : vaxxes) {
 
             ExtractedClassInformation vaccine_class_information = extractor.extractClassExpressions(vax.getIRI());
-            
+            vaccine_class_dataset.put(vax, vaccine_class_information);
+            //vaccine_class_dataset.add(vaccine_class_information);
         }
 
+    }
+    
+    public void encodeSimpleSubClasses(){
+        
+        
+        for(var i : vaccine_class_dataset.entrySet()){
+            
+            OWLClass vax = i.getKey();
+            ExtractedClassInformation vax_info = i.getValue();
+            
+            NanoViolinEncoder nve = NanoViolinEncoder.getInstance();
+            nve.instantiateNewNanoViolinPub(vax.getIRI().toString());
+            
+            vax_info.subclasses.forEach(o->{
+                nve.writeTypeOfStatement(vax.getIRI().toString(), o.getIRI().toString());
+            });
+        }
+        
+        
     }
     
     public void setUpExtraction(){
@@ -89,5 +113,7 @@ public class NanoViolin {
         nv.batchVaccineNanopubCreation(retrieveAllVaccineIRIs);
 
 
+        nv.encodeSimpleSubClasses();
+        
     }
 }
