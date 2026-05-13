@@ -4,16 +4,21 @@
  */
 package edu.utmb.ontology.nanovoilin.util;
 
+import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
 import java.io.File;
 import java.util.Set;
+import static java.util.stream.Collectors.toSet;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.search.EntitySearcher;
 
 /**
  *
@@ -70,6 +75,23 @@ public class OWLHandler {
         
         OWLClass owlClass = factory.getOWLClass(iri_class);
         return owlClass;
+    }
+    
+    public Set<OWLClass> getAllClasses(){
+        
+        Set<OWLClass> all_classes = ontology.classesInSignature().collect(toSet());
+        
+        
+        
+        return all_classes;
+        
+    }
+    
+    public OWLAnnotationProperty getOWLAnnotationProperty(IRI iri){
+        
+        OWLAnnotationProperty owlAnnotationProperty = factory.getOWLAnnotationProperty(iri);
+        
+        return owlAnnotationProperty;
     }
     
     /*public void getClassSignature(OWLClass owl_class){
