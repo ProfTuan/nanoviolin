@@ -80,10 +80,11 @@ public class NanoViolin {
 
     }
     
-    public void encodeSimpleSubClasses(){
+    public void encodeToNanoViolinPublication(){
         
         
-        for(var i : vaccine_class_dataset.entrySet()){
+        for(var i : vaccine_class_dataset.entrySet())
+        {
             
             OWLClass vax = i.getKey();
             ExtractedClassInformation vax_info = i.getValue();
@@ -112,8 +113,7 @@ public class NanoViolin {
         
         nv.batchVaccineNanopubCreation(retrieveAllVaccineIRIs);
 
-
-        nv.encodeSimpleSubClasses();
+        nv.encodeToNanoViolinPublication();
         
     }
 }
