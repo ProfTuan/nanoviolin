@@ -19,6 +19,8 @@ import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.search.EntitySearcher;
+import static org.semanticweb.owlapi.vocab.Namespaces.RDF;
+import static org.semanticweb.owlapi.vocab.Namespaces.RDFS;
 
 /**
  *
@@ -82,11 +84,12 @@ public class NanoViolin {
     
     public void vaccine_NanoViolinPublication(){
         
-        
+        //OWLAnnotationProperty rdfs_label = owl_controller.getOWLAnnotationProperty();
+        OWLAnnotationProperty rdfsLabel = owl_controller.getOWLDataFactory().getRDFSLabel();
         for(var i : vaccine_class_dataset.entrySet())
         {
             
-            OWLClass vax = i.getKey();
+            OWLClass vax = i.getKey(); System.out.println(vax.toString());
             ExtractedClassInformation vax_info = i.getValue();
             
             NanoViolinEncoder nve = NanoViolinEncoder.getInstance();
@@ -95,6 +98,49 @@ public class NanoViolin {
             vax_info.subclasses.forEach(o->{
                 nve.writeTypeOfStatement(vax.getIRI().toString(), o.getIRI().toString());
             });
+            
+            
+            
+            
+            vax_info.class_annotations.forEach(a->{
+                
+                if(a.getProperty().isLabel()){
+                    
+                   nve.writeLabelStatement(
+                           vax.getIRI().toString(), 
+                           a.getValue().asLiteral().get().getLiteral());
+                   
+                }
+                else if(a.getProperty().getIRI().equals(VaccineOntologyIRI.has_cross_reference())){
+                    
+                    
+                    nve.writeCrossReferenceStatement(a.getValue().asLiteral().get().getLiteral());
+                }
+                else if(a.getProperty().getIRI().equals(VaccineOntologyIRI.definition_source())){
+                    
+                    
+                    nve.writeDefinitionSource(a.getValue().asLiteral().get().getLiteral());
+                    
+                }
+                else if(a.getProperty().getIRI().equals(VaccineOntologyIRI.definition())){
+                    nve.writeDefinitionStatement(a.getValue().asLiteral().get().getLiteral());
+                }
+                else if(a.getProperty().getIRI().equals(VaccineOntologyIRI.violin_vaccine_id())){
+                    nve.writeViolinVaccineID(a.getValue().asLiteral().get().getLiteral());
+                }
+                else if(a.getProperty().getIRI().equals(VaccineOntologyIRI.term_editor())){
+                    nve.writeTermEditorStatement(a.getValue().asLiteral().get().getLiteral());
+                    
+                }
+                else{
+                    
+                    //System.out.println("\t"+a);
+                }
+                
+                
+            });
+            
+            vax_info.class_expressions.forEach(System.out::println);
         }
         
         

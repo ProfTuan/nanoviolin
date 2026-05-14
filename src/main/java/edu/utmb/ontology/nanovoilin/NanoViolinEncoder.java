@@ -59,9 +59,9 @@ public class NanoViolinEncoder extends NanoEncoderImplementation {
     
     public void writeLabelStatement(String iri_subject, String value){
         IRI subject = value_factory.createIRI(iri_subject);
-        IRI value_object = value_factory.createIRI(value);
+        //IRI value_object = value_factory.createIRI(value);
         
-        encodeAssertionStatement(subject, RDFS.LABEL, value_object);
+        encodeAssertionStatement(subject, RDFS.LABEL, value);
     }
     
 

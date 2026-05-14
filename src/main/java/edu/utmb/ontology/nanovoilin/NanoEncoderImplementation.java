@@ -43,6 +43,17 @@ public abstract class NanoEncoderImplementation implements NanoEncoder {
 
     }
 
+    public void encodeAssertionStatement(IRI subject, IRI predicate, String object_value){
+        
+        Literal value = value_factory.createLiteral(object_value, CoreDatatype.XSD.STRING);
+        
+        try {
+            creator.addAssertionStatement(subject, predicate, value);
+        } catch (NanopubAlreadyFinalizedException ex) {
+            System.getLogger(NanoEncoderImplementation.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
+    
     public void encodeAssertionStatement(IRI subject, IRI predicate, IRI object) {
 
         try {
