@@ -140,7 +140,13 @@ public class NanoViolin {
                 
             });
             
-            vax_info.class_expressions.forEach(System.out::println);
+            //TODO: write statements with 2 components
+            //vax_info.class_expressions.
+            
+            //TODO: export or publish
+            
+            //nve.signOffNanoViolinPub();
+            //nve.publishNanoViolinAsExport("/");
         }
         
         
