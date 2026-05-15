@@ -78,14 +78,24 @@ public class SQLiteDBConnection {
     
     
     
-    public void insertViolinNanoPub(String id, String label, String nanopub_content){
+    public void insertViolinNanoPub(String id, String label, String assertion, String provenance, String publicationinformation){
         
         try {
             //PreparedStatement statement = connection.prepareStatement("");
 
-            PreparedStatement statement = connection.prepareCall("INSERT INTO " + db_name + " () VALUES (?)");
+            String sql = "INSERT INTO " + SQLCommands.vaccine_nanopub_table + " (id, label, assertion, provenance, publicationinformation) VALUES (?,?,?,?,?)";
             
             
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            statement.setString(1, id);
+            statement.setString(2, label);
+            statement.setString(3, assertion);
+            statement.setString(4, provenance);
+            statement.setString(5, publicationinformation);
+            
+            statement.executeUpdate();
             
             
         } catch (SQLException ex) {

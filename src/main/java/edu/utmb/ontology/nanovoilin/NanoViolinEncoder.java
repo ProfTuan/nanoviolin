@@ -38,7 +38,13 @@ public class NanoViolinEncoder extends NanoEncoderImplementation {
         
     }
     
-    
+    public void writeAuthorOfThisNanopublication(String id_orcid){
+        
+       
+        
+        this.encodePublicationInfoStatement(VaccineOntologyIRI.dc_creator, id_orcid);
+        
+    }
     
     public void writeAssertionStatementForSubject(String predicate, String object){
         

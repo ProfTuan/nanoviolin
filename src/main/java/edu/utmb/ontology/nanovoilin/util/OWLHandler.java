@@ -8,13 +8,16 @@ import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
 import java.io.File;
 import java.util.Set;
 import static java.util.stream.Collectors.toSet;
+import java.util.stream.Stream;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
@@ -85,6 +88,27 @@ public class OWLHandler {
         
         return all_classes;
         
+    }
+    
+    public String getOWLClassLabel(OWLClass oc){
+        
+        StringBuilder label = new StringBuilder();
+        
+        Stream<OWLAnnotation> annotations = EntitySearcher.getAnnotations(oc, ontology, factory.getRDFSLabel());
+        
+        annotations.forEach(anno->{
+            
+            OWLAnnotationValue value = anno.getValue();
+            if(value instanceof OWLLiteral){
+                
+                String literal = value.asLiteral().get().getLiteral();
+                label.append(literal);
+                
+            }
+            
+        });
+        
+        return label.toString();
     }
     
     public OWLAnnotationProperty getOWLAnnotationProperty(IRI iri){

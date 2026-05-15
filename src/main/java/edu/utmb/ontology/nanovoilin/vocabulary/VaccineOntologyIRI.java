@@ -29,6 +29,13 @@ public class VaccineOntologyIRI {
     
     final public static String has_cross_reference = "http://www.geneontology.org/formats/oboInOwl#hasDbXref";
     
+    final public static String dc_creator = "http://purl.org/dc/elements/1.1/creator";
+    
+    
+    static public IRI dc_creator(){
+        return IRI.create(dc_creator);
+    }
+    
     static public IRI IRI(){
         return IRI.create(IRI_string);
     }

@@ -27,6 +27,9 @@ import org.semanticweb.owlapi.search.EntitySearcher;
  * @author mac
  */
 public class NanoViolin {
+
+
+    private String orcid = "https://orcid.org/0000-0003-4333-1857";
     
     private OWLHandler owl_controller = null;
     private ExtractAxioms extractor = null;
@@ -189,28 +192,28 @@ public class NanoViolin {
                                 
                         
                     }
-                    
                     else{
-                        
-                        
+
                         new NanoViolinException("There exist triple whose class expression is not SOME VALUES FROM");
                     }
                     
                 
-                    //nve.writeAssertionStatementForSubject(predicate, object);
                     
                 }
                 
                 
             });
             
-            System.out.println("\n\n---------------------\n\n");
-            System.out.println(nve.getContents());
+            //Publication Info
             
-            //TODO: export or publish
+            nve.writeAuthorOfThisNanopublication(orcid);
             
-            //nve.signOffNanoViolinPub();
-            //nve.publishNanoViolinAsExport("/");
+            
+            //Dump into temporary database
+            sqlite.insertViolinNanoPub(nve.nanoViolinIRI.toString(), owl_controller.getOWLClassLabel(vax), nve.getAssertionContent(), nve.getProvenanceContent(), 
+                    nve.getPublicationInfoContent());
+            
+            
         }
         
         

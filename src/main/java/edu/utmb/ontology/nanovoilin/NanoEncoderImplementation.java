@@ -4,6 +4,7 @@
  */
 package edu.utmb.ontology.nanovoilin;
 
+import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -75,7 +76,35 @@ public abstract class NanoEncoderImplementation implements NanoEncoder {
 
     }
     
-    public void encodePublicationInfoStatement(){
+    public void encodePublicationInfoStatement(String iri_predicate, String value_string){
+        
+        Literal value = value_factory.createLiteral(value_string);
+        
+        IRI predicate = value_factory.createIRI(iri_predicate);
+        
+        try {
+            creator.addPubinfoStatement(predicate, value);
+            //creator.addPubinfoStatement(predicate, predicate);
+            
+        } catch (NanopubAlreadyFinalizedException ex) {
+            System.getLogger(NanoEncoderImplementation.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        
+    }
+    
+    public void encodeAuthorPublicationInfoStatement(String iri_value){
+        
+        IRI predicate = value_factory.createIRI(VaccineOntologyIRI.dc_creator);
+        
+        IRI value = value_factory.createIRI(iri_value);
+        
+        
+        try {
+            creator.addPubinfoStatement(predicate, value);
+        } catch (NanopubAlreadyFinalizedException ex) {
+            System.getLogger(NanoEncoderImplementation.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        
         
     }
     
