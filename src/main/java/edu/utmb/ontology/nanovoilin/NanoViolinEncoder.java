@@ -38,11 +38,19 @@ public class NanoViolinEncoder extends NanoEncoderImplementation {
         
     }
     
-    public void writeAssertionStatement(RDF predicate, String string_value){
+    
+    
+    public void writeAssertionStatementForSubject(String predicate, String object){
         
         if (creator == null){
             
         }
+        
+        IRI predicate_iri = value_factory.createIRI(predicate);
+        IRI object_iri = value_factory.createIRI(object);
+        
+        encodeAssertionStatement(nanoViolinIRI, predicate_iri, object_iri);
+        //encodeAssertionStatement()
         //creator.addAssertionStatement(statement);
     }
     

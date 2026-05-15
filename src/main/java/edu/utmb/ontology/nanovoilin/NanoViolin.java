@@ -11,13 +11,16 @@ import edu.utmb.ontology.nanovoilin.util.OWLHandler;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import static java.util.stream.Collectors.toSet;
 import java.util.stream.Stream;
+import org.semanticweb.owlapi.model.ClassExpressionType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.search.EntitySearcher;
 import static org.semanticweb.owlapi.vocab.Namespaces.RDF;
 import static org.semanticweb.owlapi.vocab.Namespaces.RDFS;
@@ -89,7 +92,8 @@ public class NanoViolin {
         for(var i : vaccine_class_dataset.entrySet())
         {
             
-            OWLClass vax = i.getKey(); System.out.println(vax.toString());
+            OWLClass vax = i.getKey(); 
+            //System.out.println(vax.toString());
             ExtractedClassInformation vax_info = i.getValue();
             
             NanoViolinEncoder nve = NanoViolinEncoder.getInstance();
@@ -139,9 +143,59 @@ public class NanoViolin {
                 
                 
             });
+         
             
-            //TODO: write statements with 2 components
-            //vax_info.class_expressions.
+            vax_info.class_expressions.forEach(owe->{
+             
+                
+                //TODO: Need to support more complex class expressions.
+                
+                if(owe.signature().count() == 2){
+                    
+                    
+                    
+                    if(owe.getClassExpressionType().equals(ClassExpressionType.OBJECT_SOME_VALUES_FROM)){
+                        
+                        String property_string = owe.objectPropertiesInSignature().findFirst().get().toString();
+                        
+                        if(owe.getClassesInSignature().size()==1){
+                            
+                            String object = owe.getClassesInSignature().stream().findFirst().get().toString();
+                            
+                            nve.writeAssertionStatementForSubject(property_string, object);
+                            
+                        }
+                        else if(owe.getIndividualsInSignature().size() == 1){
+                            
+                            String object = owe.getIndividualsInSignature().stream().findFirst().get().toString();
+                            
+                            nve.writeAssertionStatementForSubject(property_string, object);
+                            
+                        }
+                        else{
+                           
+                            
+                            new NanoViolinException("Found a specific issue with a class expression: " + owe);
+                        }
+                                
+                        
+                    }
+                    
+                    else{
+                        
+                        
+                        new NanoViolinException("There exist triple whose class expression is not SOME VALUES FROM");
+                    }
+                    
+                
+                    //nve.writeAssertionStatementForSubject(predicate, object);
+                    
+                }
+                
+                
+            });
+            
+            
             
             //TODO: export or publish
             
