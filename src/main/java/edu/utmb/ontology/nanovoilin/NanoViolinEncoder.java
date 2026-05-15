@@ -115,6 +115,81 @@ public class NanoViolinEncoder extends NanoEncoderImplementation {
     public static NanoViolinEncoder getInstance() {
         return NanoViolinEncoderHolder.INSTANCE;
     }
+
+    public String getContents() {
+        
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("ASSERTIONS\n\n");
+        creator.getCurrentAssertionStatements().forEach(statement->{
+            
+            sb.append(statement.toString() + "\n");
+            
+        });
+        
+        sb.append("PROVENANCE\n\n");
+        
+        creator.getCurrentProvenanceStatements().forEach(statement->{
+            
+            sb.append(statement.toString() + "\n");
+            
+        });
+        
+        sb.append("PUBLICATION INFORMATION\n\n");
+        
+        creator.getCurrentPubinfoStatements().forEach(statement->{
+            
+            sb.append(statement.toString() + "\n");
+            
+        });
+        
+        return sb.toString();
+        
+    }
+    
+    public String getPublicationInfoContent(){
+         StringBuilder sb = new StringBuilder();
+         
+          creator.getCurrentPubinfoStatements().forEach(statement->{
+            
+            sb.append(statement.toString() + "\n");
+            
+        });
+          
+          
+        return sb.toString();
+
+    }
+    
+    
+    public String getProvenanceContent(){
+         StringBuilder sb = new StringBuilder();
+         
+          creator.getCurrentProvenanceStatements().forEach(statement->{
+            
+            sb.append(statement.toString() + "\n");
+            
+        });
+          
+          
+        return sb.toString();
+
+    }
+    
+    
+    public String getAssertionContent(){
+         StringBuilder sb = new StringBuilder();
+         
+          creator.getCurrentAssertionStatements().forEach(statement->{
+            
+            sb.append(statement.toString() + "\n");
+            
+        });
+          
+          
+        return sb.toString();
+
+    }
     
     private static class NanoViolinEncoderHolder {
 

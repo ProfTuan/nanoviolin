@@ -37,6 +37,8 @@ public class NanoViolin {
     private Set<OWLClass> vaccine_entities = null;
     private Map<OWLClass, ExtractedClassInformation> vaccine_class_dataset = null;
     
+    private String database_path_name = "~";
+    
     public NanoViolin(){
         if(owl_controller == null) owl_controller = OWLHandler.getInstance();
         
@@ -195,7 +197,8 @@ public class NanoViolin {
                 
             });
             
-            
+            System.out.println("\n\n---------------------\n\n");
+            System.out.println(nve.getContents());
             
             //TODO: export or publish
             
