@@ -36,7 +36,7 @@ public class SQLiteDBConnection {
             //create the table
 
             PreparedStatement statement = connection.prepareStatement(SQLCommands.create_vaccine_nanopub_table);
-            
+            statement.executeUpdate();
             clearTableData(SQLCommands.vaccine_nanopub_table);
             
         } catch (SQLException ex) {
@@ -51,7 +51,7 @@ public class SQLiteDBConnection {
             Statement statement = connection.createStatement();
             
             String sql = SQLCommands.clear_table.replace("table_name", table_name);
-            
+            System.out.println(sql);
             statement.executeUpdate(sql);
         } catch (SQLException ex) {
             System.getLogger(SQLiteDBConnection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -64,7 +64,7 @@ public class SQLiteDBConnection {
         
         try {
             Class.forName("org.sqlite.JDBC");
-            
+ 
             connection = DriverManager.getConnection("jdbc:sqlite:" + db_name);
             
         } catch (ClassNotFoundException ex) {
@@ -72,13 +72,25 @@ public class SQLiteDBConnection {
         } catch (SQLException ex) {
             System.getLogger(SQLiteDBConnection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
+        
+        createTables();
     }
     
     
     
     public void insertViolinNanoPub(String id, String label, String nanopub_content){
         
-        //PreparedStatement statement = connection.prepareStatement("");
+        try {
+            //PreparedStatement statement = connection.prepareStatement("");
+
+            PreparedStatement statement = connection.prepareCall("INSERT INTO " + db_name + " () VALUES (?)");
+            
+            
+            
+            
+        } catch (SQLException ex) {
+            System.getLogger(SQLiteDBConnection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
         
     }
     

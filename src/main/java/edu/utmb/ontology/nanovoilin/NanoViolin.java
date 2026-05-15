@@ -5,25 +5,22 @@
 package edu.utmb.ontology.nanovoilin;
 
 import edu.utmb.ontology.nanovoilin.data.ExtractedClassInformation;
+import edu.utmb.ontology.nanovoilin.db.SQLiteDBConnection;
 import edu.utmb.ontology.nanovoilin.extraction.ExtractAxioms;
 import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
 import edu.utmb.ontology.nanovoilin.util.OWLHandler;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import static java.util.stream.Collectors.toSet;
 import java.util.stream.Stream;
 import org.semanticweb.owlapi.model.ClassExpressionType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.search.EntitySearcher;
-import static org.semanticweb.owlapi.vocab.Namespaces.RDF;
-import static org.semanticweb.owlapi.vocab.Namespaces.RDFS;
 
 /**
  *
@@ -37,7 +34,7 @@ public class NanoViolin {
     private Set<OWLClass> vaccine_entities = null;
     private Map<OWLClass, ExtractedClassInformation> vaccine_class_dataset = null;
     
-    private String database_path_name = "~";
+    private String database_path_name = "temp_nano.db";
     
     public NanoViolin(){
         if(owl_controller == null) owl_controller = OWLHandler.getInstance();
@@ -89,8 +86,18 @@ public class NanoViolin {
     
     public void vaccine_NanoViolinPublication(){
         
-        //OWLAnnotationProperty rdfs_label = owl_controller.getOWLAnnotationProperty();
+        SQLiteDBConnection sqlite = SQLiteDBConnection.getInstance();
+        
+        long timestamp = new Date().getTime();
+        
+        String connection = database_path_name.replace(".db", "_" +timestamp +".db");
+        
+        System.out.println(connection);
+        
+        sqlite.initConnection(connection);
+        
         OWLAnnotationProperty rdfsLabel = owl_controller.getOWLDataFactory().getRDFSLabel();
+        
         for(var i : vaccine_class_dataset.entrySet())
         {
             
@@ -209,13 +216,7 @@ public class NanoViolin {
         
     }
     
-    private void transform(){
-        
-    }
     
-    public void setUpExtraction(){
-        
-    }
 
     public static void main(String[] args) {
         
