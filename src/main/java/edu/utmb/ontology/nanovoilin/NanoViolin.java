@@ -163,7 +163,6 @@ public class NanoViolin {
                 }
                 else{
                     
-                    //System.out.println("\t"+a.getProperty());
                     
                     if(uncovered.containsKey(a.getProperty().toString())){
                         
@@ -190,6 +189,7 @@ public class NanoViolin {
                 //TODO: Need to support more complex class expressions.
                 
                 if(owe.signature().count() == 2){
+                    
                     
                     
                     
@@ -225,6 +225,23 @@ public class NanoViolin {
                     }
                     
                 
+                    
+                }
+                
+                else if(owe.signature().count() > 2){
+                    
+                    
+                    if(uncovered.containsKey("complex class expressions")){
+                        Integer value = uncovered.get("complex class expressions");
+                        
+                        value = Integer.valueOf(value.intValue() + 1);
+                        
+                        uncovered.put("complex class expressions", value);
+                        
+                    }
+                    else{
+                        uncovered.put("complex class expressions", Integer.valueOf(1));
+                    }
                     
                 }
                 
