@@ -150,7 +150,7 @@ public class NanoViolin {
                 }
                 else{
                     
-                    //System.out.println("\t"+a);
+                    //System.out.println("\t"+a.getProperty());
                 }
                 
                 
