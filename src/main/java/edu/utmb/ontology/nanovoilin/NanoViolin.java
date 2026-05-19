@@ -36,6 +36,7 @@ public class NanoViolin {
     private NanoViolinEncoder encoder = null;
     private Set<OWLClass> vaccine_entities = null;
     private Map<OWLClass, ExtractedClassInformation> vaccine_class_dataset = null;
+    private Map<String, Integer> uncovered = null;
     
     private String database_path_name = "temp_nano.db";
     
@@ -51,6 +52,16 @@ public class NanoViolin {
         
         extractor = new ExtractAxioms(owl_controller);
 
+    }
+    
+    public void printUncovered(){
+        
+        for(var e : uncovered.entrySet()){
+            
+            System.out.println(e.getKey() + " - " + e.getValue());
+            
+        }
+        
     }
     
     public Set<OWLClass> retrieveAllVaccineIRIs(){
@@ -88,6 +99,8 @@ public class NanoViolin {
     }
     
     public void vaccine_NanoViolinPublication(){
+        
+        uncovered = new HashMap<>();
         
         SQLiteDBConnection sqlite = SQLiteDBConnection.getInstance();
         
@@ -151,6 +164,20 @@ public class NanoViolin {
                 else{
                     
                     //System.out.println("\t"+a.getProperty());
+                    
+                    if(uncovered.containsKey(a.getProperty().toString())){
+                        
+                        Integer current = uncovered.get(a.getProperty().toString());
+                        current = Integer.valueOf(current.intValue()+1);
+                        
+                        uncovered.put(a.getProperty().toString(), current);
+                        
+                    }
+                    else{
+                        //Integer.valueOf(1);
+                        uncovered.put(a.getProperty().toString(), Integer.valueOf(1));
+                        
+                    }
                 }
                 
                 
@@ -231,6 +258,8 @@ public class NanoViolin {
         nv.batchVaccineNanopubCreation(retrieveAllVaccineIRIs);
 
         nv.vaccine_NanoViolinPublication();
+        
+        nv.printUncovered();
         
     }
 }
