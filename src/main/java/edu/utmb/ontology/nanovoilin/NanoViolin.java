@@ -195,18 +195,18 @@ public class NanoViolin {
                     
                     if(owe.getClassExpressionType().equals(ClassExpressionType.OBJECT_SOME_VALUES_FROM)){
                         
-                        String property_string = owe.objectPropertiesInSignature().findFirst().get().toString();
-                        
+                        String property_string = owe.objectPropertiesInSignature().findFirst().get().toStringID();
+                        //System.out.println("string id: "+ owe.objectPropertiesInSignature().findFirst().get().toStringID());
                         if(owe.getClassesInSignature().size()==1){
                             
-                            String object = owe.getClassesInSignature().stream().findFirst().get().toString();
+                            String object = owe.getClassesInSignature().stream().findFirst().get().toStringID();
                             
                             nve.writeAssertionStatementForSubject(property_string, object);
                             
                         }
                         else if(owe.getIndividualsInSignature().size() == 1){
                             
-                            String object = owe.getIndividualsInSignature().stream().findFirst().get().toString();
+                            String object = owe.getIndividualsInSignature().stream().findFirst().get().toStringID();
                             
                             nve.writeAssertionStatementForSubject(property_string, object);
                             
@@ -240,6 +240,7 @@ public class NanoViolin {
             sqlite.insertViolinNanoPub(nve.nanoViolinIRI.toString(), owl_controller.getOWLClassLabel(vax), nve.getAssertionContent(), nve.getProvenanceContent(), 
                     nve.getPublicationInfoContent());
             
+            nve.publishNanoViolinAsExport("nano-export");
             
         }
         

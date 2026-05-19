@@ -18,6 +18,7 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.base.CoreDatatype;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFFormat;
+import org.nanopub.MalformedNanopubException;
 import org.nanopub.Nanopub;
 import org.nanopub.NanopubAlreadyFinalizedException;
 import org.nanopub.NanopubCreator;
@@ -58,6 +59,7 @@ public abstract class NanoEncoderImplementation implements NanoEncoder {
     public void encodeAssertionStatement(IRI subject, IRI predicate, IRI object) {
 
         try {
+            
             creator.addAssertionStatement(subject, predicate, object);
         } catch (NanopubAlreadyFinalizedException ex) {
             System.getLogger(NanoViolinEncoder.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -122,6 +124,8 @@ public abstract class NanoEncoderImplementation implements NanoEncoder {
 
         try {
 
+            nanoViolinPub = creator.finalizeNanopub(true);
+            
             signing = SignNanopub.signAndTransform(nanoViolinPub, TransformContext.makeDefault());
 
             NanopubUtils.writeToStream(signing, System.err, RDFFormat.TRIG);
@@ -132,11 +136,18 @@ public abstract class NanoEncoderImplementation implements NanoEncoder {
             System.getLogger(NanoViolinEncoder.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         } catch (SignatureException ex) {
             System.getLogger(NanoViolinEncoder.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } catch (MalformedNanopubException ex) {
+            System.getLogger(NanoEncoderImplementation.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } catch (NanopubAlreadyFinalizedException ex) {
+            System.getLogger(NanoEncoderImplementation.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
 
     }
 
     public void publishNanoViolinAsExport(String file_export_path) {
+        
+        this.signOffNanoViolinPub();
+        
         try {
             NanopubUtils.writeToStream(signing, new FileOutputStream(new File(file_export_path)), RDFFormat.TRIG);
         } catch (FileNotFoundException ex) {
