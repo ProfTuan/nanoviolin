@@ -6,6 +6,7 @@ package edu.utmb.ontology.nanovoilin.util;
 
 import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
 import java.io.File;
+import java.util.Map;
 import java.util.Set;
 import static java.util.stream.Collectors.toSet;
 import java.util.stream.Stream;
@@ -16,6 +17,7 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDocumentFormat;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -118,6 +120,18 @@ public class OWLHandler {
         return owlAnnotationProperty;
     }
     
+    public Map<String, String> getNamespaces(){
+        
+        Map<String, String> prefixName2PrefixMap = null;
+        OWLDocumentFormat ontologyFormat = manager.getOntologyFormat(ontology);
+        
+        if(ontologyFormat.isPrefixOWLDocumentFormat()){
+            prefixName2PrefixMap = ontologyFormat.asPrefixOWLDocumentFormat().getPrefixName2PrefixMap();
+        }
+
+        return prefixName2PrefixMap;
+    }
+    
     /*public void getClassSignature(OWLClass owl_class){
         
         Set<OWLEntity> signature = owl_class.getSignature();
@@ -133,5 +147,12 @@ public class OWLHandler {
     private static class OWLHandlerHolder {
 
         private static final OWLHandler INSTANCE = new OWLHandler();
+    }
+    
+    
+    public static void main(String[] args) {
+        
+       
+        
     }
 }

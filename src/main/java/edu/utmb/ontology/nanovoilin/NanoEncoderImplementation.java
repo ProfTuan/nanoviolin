@@ -44,7 +44,7 @@ public abstract class NanoEncoderImplementation implements NanoEncoder {
     public NanoEncoderImplementation() {
 
     }
-
+    @Override
     public void encodeAssertionStatement(IRI subject, IRI predicate, String object_value){
         
         Literal value = value_factory.createLiteral(object_value, CoreDatatype.XSD.STRING);
@@ -55,7 +55,7 @@ public abstract class NanoEncoderImplementation implements NanoEncoder {
             System.getLogger(NanoEncoderImplementation.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
-    
+    @Override
     public void encodeAssertionStatement(IRI subject, IRI predicate, IRI object) {
 
         try {
@@ -65,7 +65,7 @@ public abstract class NanoEncoderImplementation implements NanoEncoder {
             System.getLogger(NanoViolinEncoder.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
-
+    @Override
     public void encodeProvenanceStatement(IRI predicate, String string_value) {
 
         Literal value_object = value_factory.createLiteral(string_value, CoreDatatype.XSD.STRING);
@@ -77,7 +77,7 @@ public abstract class NanoEncoderImplementation implements NanoEncoder {
         }
 
     }
-    
+    @Override
     public void encodePublicationInfoStatement(String iri_predicate, String value_string){
         
         Literal value = value_factory.createLiteral(value_string);
@@ -93,7 +93,7 @@ public abstract class NanoEncoderImplementation implements NanoEncoder {
         }
         
     }
-    
+    @Override
     public void encodeAuthorPublicationInfoStatement(String iri_value){
         
         IRI predicate = value_factory.createIRI(VaccineOntologyIRI.dc_creator);
@@ -110,17 +110,17 @@ public abstract class NanoEncoderImplementation implements NanoEncoder {
         
     }
     
-
+    @Override
     public void createKey() {
         try {
-            MakeKeys.make("~/.nanopub/id", SignatureAlgorithm.RSA);
+            MakeKeys.make("~/.nanopub/id", SignatureAlgorithm.RSA); 
         } catch (IOException ex) {
             System.getLogger(NanoViolinEncoder.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
 
     }
-
-    public void signOffNanoViolinPub() {
+    
+    private void signOffNanoViolinPub() {
 
         try {
 
@@ -143,7 +143,7 @@ public abstract class NanoEncoderImplementation implements NanoEncoder {
         }
 
     }
-
+    @Override
     public void publishNanoViolinAsExport(String file_export_path) {
         
         this.signOffNanoViolinPub();
@@ -154,7 +154,7 @@ public abstract class NanoEncoderImplementation implements NanoEncoder {
             System.getLogger(NanoViolinEncoder.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
-
+    
     public void publishNanoViolinPubForTestServer() {
 
         try {
@@ -164,5 +164,12 @@ public abstract class NanoEncoderImplementation implements NanoEncoder {
         }
 
     }
+
+    @Override
+    public void publishNanoViolin() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    
 
 }

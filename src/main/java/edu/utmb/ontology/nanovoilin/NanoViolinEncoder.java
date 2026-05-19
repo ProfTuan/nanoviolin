@@ -196,6 +196,7 @@ public class NanoViolinEncoder extends NanoEncoderImplementation {
         return sb.toString();
 
     }
+
     
     private static class NanoViolinEncoderHolder {
 
