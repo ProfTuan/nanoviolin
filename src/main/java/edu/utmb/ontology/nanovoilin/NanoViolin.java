@@ -37,6 +37,7 @@ public class NanoViolin {
     private Set<OWLClass> vaccine_entities = null;
     private Map<OWLClass, ExtractedClassInformation> vaccine_class_dataset = null;
     private Map<String, Integer> uncovered = null;
+    private long covered = 0;
     
     private String database_path_name = "temp_nano.db";
     
@@ -61,6 +62,8 @@ public class NanoViolin {
             System.out.println(e.getKey() + " - " + e.getValue());
             
         }
+        
+        System.out.println("COVERED: " + covered);
         
     }
     
@@ -118,6 +121,9 @@ public class NanoViolin {
         {
             
             OWLClass vax = i.getKey(); 
+            
+            
+            
             //System.out.println(vax.toString());
             ExtractedClassInformation vax_info = i.getValue();
             
@@ -126,6 +132,8 @@ public class NanoViolin {
             
             vax_info.subclasses.forEach(o->{
                 nve.writeTypeOfStatement(vax.getIRI().toString(), o.getIRI().toString());
+                //System.out.println("from subclass: " + o.getIRI().toString());
+                covered++;
             });
             
             
@@ -139,27 +147,33 @@ public class NanoViolin {
                            vax.getIRI().toString(), 
                            a.getValue().asLiteral().get().getLiteral());
                    
+                   covered++;
+                   
                 }
                 else if(a.getProperty().getIRI().equals(VaccineOntologyIRI.has_cross_reference())){
                     
                     
                     nve.writeCrossReferenceStatement(a.getValue().asLiteral().get().getLiteral());
+                    covered++;
                 }
                 else if(a.getProperty().getIRI().equals(VaccineOntologyIRI.definition_source())){
                     
                     
                     nve.writeDefinitionSource(a.getValue().asLiteral().get().getLiteral());
+                    covered++;
                     
                 }
                 else if(a.getProperty().getIRI().equals(VaccineOntologyIRI.definition())){
                     nve.writeDefinitionStatement(a.getValue().asLiteral().get().getLiteral());
+                    covered++;
                 }
                 else if(a.getProperty().getIRI().equals(VaccineOntologyIRI.violin_vaccine_id())){
                     nve.writeViolinVaccineID(a.getValue().asLiteral().get().getLiteral());
+                    covered++;
                 }
                 else if(a.getProperty().getIRI().equals(VaccineOntologyIRI.term_editor())){
                     nve.writeTermEditorStatement(a.getValue().asLiteral().get().getLiteral());
-                    
+                    covered++;
                 }
                 else{
                     
@@ -203,12 +217,17 @@ public class NanoViolin {
                             
                             nve.writeAssertionStatementForSubject(property_string, object);
                             
+                            
+                            
+                            covered++;
+                            
                         }
                         else if(owe.getIndividualsInSignature().size() == 1){
                             
                             String object = owe.getIndividualsInSignature().stream().findFirst().get().toStringID();
                             
                             nve.writeAssertionStatementForSubject(property_string, object);
+                            covered++;
                             
                         }
                         else{
