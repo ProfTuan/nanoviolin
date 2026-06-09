@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Singleton.java to edit this template
  */
-package edu.utmb.ontology.nanovoilin;
+package edu.utmb.ontology.nanoviolin;
 
-import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
+import edu.utmb.ontology.nanoviolin.vocabulary.VaccineOntologyIRI;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.PROV;
 import org.eclipse.rdf4j.model.vocabulary.RDF;

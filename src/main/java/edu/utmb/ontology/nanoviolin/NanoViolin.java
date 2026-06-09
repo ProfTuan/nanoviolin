@@ -2,13 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 
-package edu.utmb.ontology.nanovoilin;
+package edu.utmb.ontology.nanoviolin;
 
-import edu.utmb.ontology.nanovoilin.data.ExtractedClassInformation;
-import edu.utmb.ontology.nanovoilin.db.SQLiteDBConnection;
-import edu.utmb.ontology.nanovoilin.extraction.ExtractAxioms;
-import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
-import edu.utmb.ontology.nanovoilin.util.OWLHandler;
+import edu.utmb.ontology.nanoviolin.data.ExtractedClassInformation;
+import edu.utmb.ontology.nanoviolin.db.SQLiteDBConnection;
+import edu.utmb.ontology.nanoviolin.extraction.ExtractAxioms;
+import edu.utmb.ontology.nanoviolin.vocabulary.VaccineOntologyIRI;
+import edu.utmb.ontology.nanoviolin.util.OWLHandler;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;

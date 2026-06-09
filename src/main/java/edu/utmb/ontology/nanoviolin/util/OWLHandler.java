@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Singleton.java to edit this template
  */
-package edu.utmb.ontology.nanovoilin.util;
+package edu.utmb.ontology.nanoviolin.util;
 
-import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
+import edu.utmb.ontology.nanoviolin.vocabulary.VaccineOntologyIRI;
 import java.io.File;
 import java.util.Map;
 import java.util.Set;

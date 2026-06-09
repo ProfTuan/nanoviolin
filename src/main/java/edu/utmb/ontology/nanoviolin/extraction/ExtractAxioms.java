@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package edu.utmb.ontology.nanovoilin.extraction;
+package edu.utmb.ontology.nanoviolin.extraction;
 
-import edu.utmb.ontology.nanovoilin.data.ExtractedClassInformation;
-import edu.utmb.ontology.nanovoilin.vocabulary.VaccineOntologyIRI;
-import edu.utmb.ontology.nanovoilin.util.OWLHandler;
+import edu.utmb.ontology.nanoviolin.data.ExtractedClassInformation;
+import edu.utmb.ontology.nanoviolin.vocabulary.VaccineOntologyIRI;
+import edu.utmb.ontology.nanoviolin.util.OWLHandler;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;

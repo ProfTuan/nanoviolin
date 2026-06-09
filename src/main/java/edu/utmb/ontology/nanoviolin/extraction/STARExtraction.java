@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package edu.utmb.ontology.nanovoilin.extraction;
+package edu.utmb.ontology.nanoviolin.extraction;
 
 import java.util.Set;
 import org.semanticweb.owlapi.model.OWLAxiom;
