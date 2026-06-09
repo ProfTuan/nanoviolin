@@ -20,3 +20,6 @@ Also, a Sqlite database will be created in the project folder. You may need to o
 - Tuan Amith, PhD
 - Yongqun He, PhD, MS
 
+## License
+
+Available under the GPLv3 (or later) license. See license for more details.
